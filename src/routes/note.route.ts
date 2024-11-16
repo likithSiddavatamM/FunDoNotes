@@ -14,73 +14,74 @@ class NoteRoutes {
   }
 
   private routes = () => {
-    //route to crate a note
+
+    // route to create a note
     this.router.post(
-      '/createnote',
-      userAuth,
-      this.NoteValidator.uData,
+      '',
+      userAuth(),
+      this.NoteValidator.userData,
       this.NoteController.createNote  
     );
 
-    //route to read a note
+    // route to read all notes
     this.router.get(
-      '/readnote/:id',
-      userAuth,
-      this.NoteValidator.id,
-      this.NoteController.readNote
-    );
-
-    //route to read all notes
-    this.router.get(
-      '/readnotes',
-      userAuth,
+      '',
+      userAuth(),
       cache,
       this.NoteController.readNotes
     );
 
-    //route to update a note
+    // route to read a note
+    this.router.get(
+      '/:id',
+      userAuth(),
+      this.NoteValidator.id,
+      this.NoteController.readNote
+    );
+
+    // route to update a note
     this.router.put(
-      '/updatenote/:id',
-      userAuth,
+      '/:id',
+      userAuth(),
       this.NoteValidator.data,
       this.NoteController.updateNote
     );
 
-    //route to trash a note
+    // route to delete notes permanently from trash
     this.router.delete(
-      '/trash/:id',
-      userAuth,
+      '/:id',
+      userAuth(),
+      this.NoteValidator.id,
+      this.NoteController.deletePermanently
+    );
+
+    // route to archive a note
+    this.router.put(
+      '/:id/archive',
+      userAuth(),
+      this.NoteValidator.id,
+      this.NoteController.archive
+    );
+    
+    // route to trash a note
+    this.router.put(
+      '/:id/trash',
+      userAuth(),
       this.NoteValidator.id,
       this.NoteController.trash
     );
 
-    //route to delete notes permanetly from trash
-    this.router.delete(
-      '/deletepermanetly/:id',
-      userAuth,
-      this.NoteValidator.id,
-      this.NoteController.deletePermanetly
-    );
-
-    //route to archive a note 
-    this.router.put(
-      '/archive/:id',
-      userAuth,
-      this.NoteValidator.id,
-      this.NoteController.archive
-    );
-
-    //route to view trashBin
+    // route to view trashBin
     this.router.get(
-      '/trashbin',
-      userAuth,
+      '/trash/trashbin',
+      userAuth(),
       this.NoteController.trashBin
     );
 
-    //route to view all archives 
+    // route to view all archives
     this.router.get(
-      '/archives',
-      userAuth,
+      '/archive/archives',
+      userAuth(),
       this.NoteController.archives
     );
   };

@@ -36,7 +36,7 @@
     }
   ],
   "paths": {
-    "/api/v1/fundonotes/user/register": {
+    "/api/v1/fundonotes/user": {
       "post": {
         "tags": ["User"],
         "summary": "Register a new user",
@@ -177,18 +177,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "accesstoken": {
-                    "type": "string",
-                    "description": "Access token sent to the user's email for resetting the password",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  },
                   "password": {
                     "type": "string",
                     "description": "New password for the user, must be at least 10 characters and contain a special character",
                     "example": "newpassword123!"
                   }
                 },
-                "required": ["accesstoken", "password"]
+                "required": ["password"]
               }
             }
           }
@@ -230,8 +225,7 @@
           }
         }
       }
-    },
-    "/api/v1/fundonotes/usernotes/createnote": {
+    },"/api/v1/fundonotes/usernotes": {
       "post": {
         "tags": ["Notes"],
         "summary": "Create a new note",
@@ -262,9 +256,42 @@
             "description": "Invalid input"
           }
         }
+      },
+      "get": {
+        "tags": ["Notes"],
+        "summary": "Retrieve all notes",
+        "responses": {
+          "200": {
+            "description": "All notes retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "createdBy": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error retrieving notes"
+          }
+        }
       }
     },
-    "/api/v1/fundonotes/usernotes/readnote/{id}": {
+    "/api/v1/fundonotes/usernotes/{id}": {
       "get": {
         "tags": ["Notes"],
         "summary": "Retrieve a specific note by ID",
@@ -334,7 +361,7 @@
                   "properties": {
                     "Error": {
                       "type": "string",
-                      "example": "No such note"
+                      "example": "Note not found"
                     }
                   }
                 }
@@ -342,12 +369,10 @@
             }
           }
         }
-      }
-    },
-    "/api/v1/fundonotes/usernotes/updatenote/{id}": {
+      },
       "put": {
         "tags": ["Notes"],
-        "summary": "Update a specific note by ID",
+        "summary": "Update a note by ID",
         "parameters": [
           {
             "name": "id",
@@ -356,7 +381,7 @@
             "description": "ID of the note to update",
             "schema": {
               "type": "string",
-              "example": "60c72b1f5f1b2c001d3f5b9b"
+              "example": "607d1b2f9f1b1c001c8e4e1a"
             }
           }
         ],
@@ -368,14 +393,10 @@
                 "type": "object",
                 "properties": {
                   "title": {
-                    "type": "string",
-                    "description": "Updated title of the note",
-                    "example": "Updated Note Title"
+                    "type": "string"
                   },
                   "description": {
-                    "type": "string",
-                    "description": "Updated description of the note",
-                    "example": "Updated note description content"
+                    "type": "string"
                   }
                 },
                 "required": ["title", "description"]
@@ -385,70 +406,46 @@
         },
         "responses": {
           "200": {
-            "description": "Note updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "title": {
-                      "type": "string",
-                      "example": "Updated Note Title"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "Updated note description content"
-                    },
-                    "createdBy": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Note updated successfully"
           },
           "400": {
-            "description": "Invalid request data (e.g., missing or invalid fields)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "Error": {
-                      "type": "string",
-                      "example": "Invalid ID format"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Invalid input"
           },
           "404": {
-            "description": "Note not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "Error": {
-                      "type": "string",
-                      "example": "No such note"
-                    }
-                  }
-                }
-              }
+            "description": "Note not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Notes"],
+        "summary": "Delete a note by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the note to delete",
+            "schema": {
+              "type": "string",
+              "example": "607d1b2f9f1b1c001c8e4e1a"
             }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Note deleted successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Note not found"
           }
         }
       }
     },
-    "/api/v1/fundonotes/usernotes/trash/{id}": {
-      "delete": {
+    "/api/v1/fundonotes/usernotes/{id}/trash": {
+      "put": {
         "tags": ["Notes"],
         "summary": "Move a specific note to trash or restore from trash by ID",
         "parameters": [
@@ -498,66 +495,8 @@
         }
       }
     },
-    "/api/v1/fundonotes/usernotes/deletepermanetly/{id}": {
-      "delete": {
-        "tags": ["Notes"],
-        "summary": "Permanently delete a note from trash by ID",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the note to delete permanently",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Note deleted permanently successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "RecordsDeleted": {
-                      "type": "integer",
-                      "example": 1
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Error deleting the note",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "Error": {
-                      "type": "string",
-                      "example": "Authorization token is required"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Note not found"
-          }
-        }
-      }
-    },
-    "/api/v1/fundonotes/usernotes/archive/{id}": {
+    
+    "/api/v1/fundonotes/usernotes/{id}/archive": {
       "put": {
         "tags": ["Notes"],
         "summary": "Archive or restore a specific note by ID",
@@ -608,7 +547,7 @@
         }
       }
     },
-    "/api/v1/fundonotes/usernotes/trashBin": {
+    "/api/v1/fundonotes/usernotes/trash/trashBin": {
       "get": {
         "tags": ["Notes"],
         "summary": "View all notes in the trash",
@@ -664,7 +603,7 @@
         }
       }
     },
-    "/api/v1/fundonotes/usernotes/archives": {
+    "/api/v1/fundonotes/usernotes/archive/archives": {
       "get": {
         "tags": ["Notes"],
         "summary": "View all archived notes",

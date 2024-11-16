@@ -5,49 +5,44 @@ class UserValidator {
   public regUser = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
       firstName: Joi.string()
-        .min(2) // Minimum of 2 characters
+        .min(2)
         .required(),
       
       lastName: Joi.string()
-        .min(2) // Minimum of 2 characters
+        .min(2)
         .required(),
       
       email: Joi.string()
-        .email({ tlds: { allow: false } }) // Allow any valid email format
+        .email({ tlds: { allow: false } })
         .required()
-        .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/) // Valid email format
+        .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/)
         .message('Email must be a valid format ending with .com!'),
       
       password: Joi.string()
-        .min(10) // Minimum of 10 characters
+        .min(10)
         .required()
-        // .message('Password must be at least 10 characters long!')
-        .messages({ 'string.min': 'Password must be at least 10 characters long!' })  // Custom error message for min length violation
-
+        .messages({ 'string.min': 'Password must be at least 10 characters long!' })
     });
     const { error } = schema.validate(req.body);
-    if (error) {
-      next(error);
-    }
+    if (error) next(error);
+    
     next();
   };
 
   public logUser = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
       email: Joi.string()
-        .email({ tlds: { allow: false } }) // Allow any valid email format
+        .email({ tlds: { allow: false } })
         .required()
-        .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/) // Valid email format
+        .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/)
         .message('Email must be a valid format ending with .com!'),
       
       password: Joi.string()
-        .min(10) // Minimum of 10 characters
+        .min(10)
         .required()
-        // .pattern(/^(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{10,}$/) // Password with at least one special character
-        // .message('Password must be at least 10 characters long and contain at least one special character!')
-        .messages({ 'string.min': 'Password must be at least 10 characters long!' })  // Custom error message for min length violation
+        .messages({ 'string.min': 'Password must be at least 10 characters long!' })
+    });
 
-      });
     const { error } = schema.validate(req.body);
     if (error) 
       res.status(400).json({Error:error.message});
@@ -81,31 +76,12 @@ class UserValidator {
       next();
   };
 
-  public data = (req: Request, res: Response, next: NextFunction): void => {
-    const schema = Joi.object({
-        id: Joi.string().required(),
-        title:Joi.string(),
-        description:Joi.string()
-    });
-
-    const { error } = schema.validate(req.body);
-
-    if (error) 
-      res.status(400).json({Error:error.message});
-    else
-      next();
-  };
-
   public resetPassword = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
-      // accesstoken : Joi.string().required(),
       password: Joi.string()
       .min(10) 
       .required()
-      // .pattern(/^(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{10,}$/)
-      // .message('Password must be at least 10 characters long and contain at least one special character!')
-      .messages({ 'string.min': 'Password must be at least 10 characters long!' })  // Custom error message for min length violation
-
+      .messages({ 'string.min': 'Password must be at least 10 characters long!' })
     });
 
     const { error } = schema.validate(req.body);
@@ -114,7 +90,6 @@ class UserValidator {
     else
       next();
   }
-
 }
 
 export default UserValidator;

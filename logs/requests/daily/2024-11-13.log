@@ -246,8 +246,6 @@ info: ::1 - - [13/Nov/2024:12:42:47 +0000] "GET /api/v1/fundonotes/usernotes/rea
 
 info: ::1 - - [13/Nov/2024:12:42:54 +0000] "GET /api/v1/fundonotes/usernotes/readnotes HTTP/1.1" 200 603 "-" "PostmanRuntime/7.42.0"
 
-<<<<<<< HEAD
-=======
 info: ::ffff:127.0.0.1 - - [13/Nov/2024:17:14:57 +0000] "POST /api/v1/funddonotes/user/register HTTP/1.1" 404 47 "-" "node-superagent/3.8.3"
 
 info: ::ffff:127.0.0.1 - - [13/Nov/2024:17:14:57 +0000] "POST /api/v1/funddonotes/user/register HTTP/1.1" 404 47 "-" "node-superagent/3.8.3"
@@ -621,5 +619,3 @@ info: ::ffff:127.0.0.1 - - [13/Nov/2024:18:29:24 +0000] "DELETE /api/v1/fundonot
 info: ::ffff:127.0.0.1 - - [13/Nov/2024:18:29:24 +0000] "DELETE /api/v1/fundonotes/usernotes/trash/6734f004462ba630bcb874c8 HTTP/1.1" 200 85 "-" "node-superagent/3.8.3"
 
 info: ::ffff:127.0.0.1 - - [13/Nov/2024:18:29:24 +0000] "POST /api/v1/fundonotes/usernotes/archive/6734f004462ba630bcb874c8 HTTP/1.1" 200 32 "-" "node-superagent/3.8.3"
-
->>>>>>> UserNotes

@@ -22,7 +22,7 @@ before(async () => {
 describe('User Operation tests', () => {
   it('Register User Operation: should accept a new user', (done) => {
     request(app.getApp())
-      .post('/api/v1/fundonotes/user/register')
+      .post('/api/v1/fundonotes/user/')
       .send(mockUser)
       .end((err, res) => {
         if (err) return done(err);
@@ -33,7 +33,7 @@ describe('User Operation tests', () => {
 
   it('Register User Operation: should reject a user who is present already', (done) => {
     request(app.getApp())
-      .post('/api/v1/fundonotes/user/register')
+      .post('/api/v1/fundonotes/user/')
       .send(mockUser)
       .end((err, res) => {
         if (err) return done(err);
@@ -55,7 +55,7 @@ describe('User Operation tests', () => {
       .end((err, res) => {
         if (err) return done(err);
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.be.equal(`You are now loggedIn as ${mockUser.firstName} ${mockUser.lastName}`);
+        expect(res.body.message).to.be.equal(`You are now loggedIn as ${mockUser.firstName} ${mockUser.lastName}, using ${mockUser.email}`);
         token = res.body.accessToken;
         done();
       });
@@ -101,7 +101,7 @@ describe('Note Operation tests', () => {
 
   it('Create Note Operation: should successfully create a note and return a 201 status', (done) => {
     request(app.getApp())
-      .post('/api/v1/fundonotes/usernotes/createnote')
+      .post('/api/v1/fundonotes/usernotes/')
       .set('Authorization', `Bearer ${token}`)
       .send(note)
       .end((err, res) => {
@@ -118,7 +118,7 @@ describe('Note Operation tests', () => {
 
     it('Readnote Note Operation: should return 400 for invalid note ID', (done) => {
       request(app.getApp())
-        .get(`/api/v1/fundonotes/usernotes/readnote/invalidId`)
+        .get(`/api/v1/fundonotes/usernotes/123456789123456789123456`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -129,7 +129,7 @@ describe('Note Operation tests', () => {
 
     it('Readnote Note Operation: should return 200 for valid note ID', (done) => {
       request(app.getApp())
-        .get(`/api/v1/fundonotes/usernotes/readnote/${data_id}`)
+        .get(`/api/v1/fundonotes/usernotes/${data_id}`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -141,7 +141,7 @@ describe('Note Operation tests', () => {
 
     it('Readnotes Operation: should successfully return all user notes with valid JWT and cache result', (done) => {
       request(app.getApp())
-        .get('/api/v1/fundonotes/usernotes/readnotes')
+        .get('/api/v1/fundonotes/usernotes/')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -155,7 +155,7 @@ describe('Note Operation tests', () => {
 
     it('Update Note Operation: should successfully update notes', (done) => {
       request(app.getApp())
-        .put(`/api/v1/fundonotes/usernotes/updatenote/${data_id}`)
+        .put(`/api/v1/fundonotes/usernotes/${data_id}`)
         .set('Authorization', `Bearer ${token}`)
         .send(note)
         .end((err, res) => {
@@ -168,55 +168,55 @@ describe('Note Operation tests', () => {
 
     it('Trash Note Operation: should successfully trash particular user note', (done) => {
       request(app.getApp())
-        .delete(`/api/v1/fundonotes/usernotes/trash/${data_id}`)
+        .put(`/api/v1/fundonotes/usernotes/${data_id}/trash`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
-          expect(res.body.Status).to.be.equal(`Deleted the Note (id:${data_id})`);
+          expect(res.body.status).to.be.equal(`Deleted the Note (id:${data_id})`);
           done();
         });
     });
 
     it('Trash Note Operation: should successfully restore particular user note from trash', (done) => {
       request(app.getApp())
-        .delete(`/api/v1/fundonotes/usernotes/trash/${data_id}`)
+        .put(`/api/v1/fundonotes/usernotes/${data_id}/trash`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
-          expect(res.body.Status).to.be.equal(`Restored the Note from TrashBin (id:${data_id})`);
+          expect(res.body.status).to.be.equal(`Restored the Note from TrashBin (id:${data_id})`);
           done();
         });
     });
 
     it('Archive Note Operation: should successfully archive particular user note', (done) => {
       request(app.getApp())
-        .put(`/api/v1/fundonotes/usernotes/archive/${data_id}`)
+        .put(`/api/v1/fundonotes/usernotes/${data_id}/archive`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
-          expect(res.body.Status).to.be.equal(`Archived`);
+          expect(res.body.status).to.be.equal(`Archived`);
           done();
         });
     });
 
     it('Archive Note Operation: should successfully restore particular user note from archives', (done) => {
       request(app.getApp())
-        .put(`/api/v1/fundonotes/usernotes/archive/${data_id}`)
+        .put(`/api/v1/fundonotes/usernotes/${data_id}/archive`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
-          expect(res.body.Status).to.be.equal(`Restored from Archives`);
+          expect(res.body.status).to.be.equal(`Restored from Archives`);
           done();
         });
     });
 
     it('Delete Permanently Note Operation: should successfully delete particular user note from trashbin', (done) => {
       request(app.getApp())
-        .delete(`/api/v1/fundonotes/usernotes/deletepermanetly/${data_id}`)
+        .delete(`/api/v1/fundonotes/usernotes/${data_id}`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -228,7 +228,7 @@ describe('Note Operation tests', () => {
 
     it('Archive Note Operation: should not archive user note and display the message as "No such data"', (done) => {
       request(app.getApp())
-        .put(`/api/v1/fundonotes/usernotes/archive/123456789111111111111111`)
+        .put(`/api/v1/fundonotes/usernotes/123456789111111111111111/archive`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -240,7 +240,7 @@ describe('Note Operation tests', () => {
 
     it('Archive Note Operation: should not restore user note and display the message as "No such data"', (done) => {
       request(app.getApp())
-        .put(`/api/v1/fundonotes/usernotes/archive/123456789111111111111111`)
+        .put(`/api/v1/fundonotes/usernotes/123456789111111111111111/archive`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -252,7 +252,7 @@ describe('Note Operation tests', () => {
 
     it('Archives Note Operation: should successfully return array of Notes as result from archives', (done) => {
       request(app.getApp())
-        .get(`/api/v1/fundonotes/usernotes/archives`)
+        .get(`/api/v1/fundonotes/usernotes/archive/archives`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -264,7 +264,7 @@ describe('Note Operation tests', () => {
 
     it('TrashBin Note Operation: should successfully return array of Notes as result from trashbin', (done) => {
       request(app.getApp())
-        .get(`/api/v1/fundonotes/usernotes/trashbin`)
+        .get(`/api/v1/fundonotes/usernotes/trash/trashbin`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) return done(err);

@@ -1,28 +1,26 @@
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
 
-class Transporter{
+class Transporter {
+  private data = {
+    from: process.env.SECRET_MAIL_ID,
+    to: '',
+    subject: 'Use this Reset Password Token for login',
+    text: ''
+  };
 
-    private  Data = {
-        from:process.env.SECRET_MAIL_ID,
-        to:'',
-        subject:`Use this Reset Password Token for login`,
-        text: ``
-        }
-
-    public Transporter = nodemailer.createTransport({
-        service:'gmail',
-        auth:{
-            user:process.env.SECRET_MAIL_ID,
-            pass:process.env.SECRET_MAIL_PASSWORD
-        }
-    })
-    
-    public sendMail = async(ForgetPasswordAccessToken, email)=>{
-        this.Data.to=email;
-        this.Data.text=`Your reset password token is '${ForgetPasswordAccessToken}'`
-        return await this.Transporter.sendMail(this.Data)
+  public transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.SECRET_MAIL_ID,
+      pass: process.env.SECRET_MAIL_PASSWORD
     }
+  });
 
+  public sendMail = async (forgetPasswordAccessToken: string, email: string) => {
+    this.data.to = email;
+    this.data.text = `Your reset password token is '${forgetPasswordAccessToken}'`;
+    return await this.transporter.sendMail(this.data);
+  };
 }
 
-export default new Transporter()
+export default new Transporter();

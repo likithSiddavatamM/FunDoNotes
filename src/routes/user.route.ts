@@ -15,7 +15,7 @@ import {userAuth} from '../middlewares/auth.middleware';
 
       //route to create a new user
       this.router.post(
-        '/register',
+        '',
         this.UserValidator.regUser,
         this.UserController.regUser
       );
@@ -38,7 +38,7 @@ import {userAuth} from '../middlewares/auth.middleware';
       this.router.post(
         '/resetpassword',
         this.UserValidator.resetPassword,
-        userAuth,
+        userAuth(`forgot`),
         this.UserController.resetPassword
       )
     };

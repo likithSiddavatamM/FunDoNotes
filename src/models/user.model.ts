@@ -6,36 +6,30 @@ const userCreation = new Schema(
     firstName: {
       type: String,
       required: true,
-      minlength: 2, // Minimum of 3 characters
+      minlength: 2,
     },
-
     lastName: {
       type: String,
       required: true,
-      minlength: 2, // Minimum of 3 characters
+      minlength: 2,
     },
-
     email: {
       type: String,
       required: true,
       validate: {
-        validator: function (v) {
-          return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/.test(v); // Valid email format
-        },
-        message: props => `${props.value} is not a valid email!`
-      }
+        validator: (v: string) =>
+          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/.test(v),
+        message: props => `${props.value} is not a valid email!`,
+      },
     },
-
     password: {
       type: String,
       required: true,
-      minlength: 10 // Minimum of 10 characters, no other rules
-    }
-    
+      minlength: 10,
+    },
   },
-
   {
-    timestamps: true // Automatically add createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
